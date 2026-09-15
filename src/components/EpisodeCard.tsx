@@ -14,10 +14,12 @@ export default function EpisodeCard({
         featured ? 'lg:flex lg:items-center' : ''
       }`}
     >
-      {/* Artwork */}
+      {/* Artwork / Video */}
       <div
         className={`relative overflow-hidden bg-charcoal-900 ${
-          featured ? 'aspect-[16/10] lg:aspect-[4/3] lg:w-1/2' : 'aspect-[16/10]'
+          featured
+            ? 'aspect-[16/10] lg:aspect-[4/3] lg:w-1/2'
+            : 'aspect-[16/10]'
         }`}
       >
         {/* Artwork gradient backdrop */}
@@ -32,25 +34,15 @@ export default function EpisodeCard({
           }}
         />
 
-        {/* Podcast mark */}
-        <div className="absolute inset-0 flex items-center justify-center">
-          <div className="text-center">
-            <div className="mb-3 flex items-center justify-center gap-2 text-accent/40">
-              <div className="h-px w-8 bg-accent/40" />
-              <span className="text-[10px] uppercase tracking-[0.3em]">The Orphan's Masterclass</span>
-              <div className="h-px w-8 bg-accent/40" />
-            </div>
-            <div className="font-serif text-3xl italic text-ivory-200/40">
-              {episode.number}
-            </div>
-          </div>
-        </div>
-
-        {/* Play button on hover */}
-        <div className="absolute inset-0 flex items-center justify-center bg-charcoal-900/40 opacity-0 transition-opacity duration-500 group-hover:opacity-100">
-          <button className="flex h-14 w-14 items-center justify-center rounded-full border border-ivory-200/40 backdrop-blur-sm transition-all duration-500 hover:scale-110 hover:border-accent hover:bg-accent">
-            <Play className="h-5 w-5 ml-0.5 text-ivory-100" fill="currentColor" />
-          </button>
+        {/* YouTube Video */}
+        <div className="absolute inset-0 overflow-hidden">
+          <iframe
+            className="absolute inset-0 h-full w-full"
+            src="https://www.youtube-nocookie.com/embed/LY4yny443JE"
+            title="The Orphan's Masterclass: An Introduction"
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+            allowFullScreen
+          />
         </div>
       </div>
 
@@ -61,6 +53,7 @@ export default function EpisodeCard({
           <span className="font-medium uppercase tracking-[0.2em] text-accent">
             {episode.number}
           </span>
+
           <span className="flex items-center gap-1.5">
             <Clock className="h-3.5 w-3.5" />
             {episode.duration}
@@ -91,11 +84,32 @@ export default function EpisodeCard({
             <Play className="h-4 w-4" fill="currentColor" />
             Play
           </button>
+
           <div className="h-4 w-px bg-charcoal-600" />
+
           <div className="flex items-center gap-3 text-xs text-charcoal-400">
-            <a href="#" className="hover:text-accent transition-colors">Spotify</a>
-            <a href="#" className="hover:text-accent transition-colors">Apple</a>
-            <a href="#" className="hover:text-accent transition-colors">YouTube</a>
+            <a
+              href="#"
+              className="hover:text-accent transition-colors"
+            >
+              Spotify
+            </a>
+
+            <a
+              href="#"
+              className="hover:text-accent transition-colors"
+            >
+              Apple
+            </a>
+
+            <a
+              href="https://www.youtube.com/watch?v=LY4yny443JE"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="hover:text-accent transition-colors"
+            >
+              YouTube
+            </a>
           </div>
         </div>
       </div>
