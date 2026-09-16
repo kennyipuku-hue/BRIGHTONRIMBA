@@ -1,8 +1,12 @@
+import { useState } from 'react';
 import Reveal from '@/components/Reveal';
+import BookingModal from '@/components/BookingModal';
 import { ArrowRight, Mic } from 'lucide-react';
 import { speakingAudiences } from '@/data/content';
 
 export default function SpeakingSection() {
+  const [isBookingOpen, setIsBookingOpen] = useState(false);
+
   return (
     <section
       id="speaking"
@@ -51,10 +55,14 @@ export default function SpeakingSection() {
 
             <Reveal delay={3}>
               <div className="mt-10">
-                <a href="#contact" className="btn-primary bg-ivory-100 text-charcoal-900 hover:bg-accent">
-                  Book Brighton
-                  <ArrowRight className="h-4 w-4" />
-                </a>
+                <button
+      type="button"
+      onClick={() => setIsBookingOpen(true)}
+      className="btn-primary bg-ivory-100 text-charcoal-900 hover:bg-accent"
+    >
+      Book Brighton
+      <ArrowRight className="h-4 w-4" />
+    </button>
               </div>
             </Reveal>
           </div>
@@ -82,8 +90,13 @@ export default function SpeakingSection() {
               </div>
             </div>
           </Reveal>
-        </div>
+                </div>
       </div>
+
+      <BookingModal
+        isOpen={isBookingOpen}
+        onClose={() => setIsBookingOpen(false)}
+      />
     </section>
   );
 }

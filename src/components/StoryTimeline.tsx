@@ -1,6 +1,14 @@
+import { useState } from 'react';
 import Reveal from '@/components/Reveal';
 import Portrait from '@/components/Portrait';
-import { User, MapPin, Coins, GraduationCap, Wrench, Heart } from 'lucide-react';
+import {
+  User,
+  MapPin,
+  Coins,
+  GraduationCap,
+  Wrench,
+  Heart,
+} from 'lucide-react';
 import { storyPoints } from '@/data/content';
 
 const pointIcons = [
@@ -17,25 +25,38 @@ const pointIcons = [
 ];
 
 export default function StoryTimeline() {
+  const [showMore, setShowMore] = useState(false);
+
+  const visibleStoryPoints = showMore
+    ? storyPoints
+    : storyPoints.slice(0, 3);
+
   return (
-    <section id="story" className="relative bg-ivory-50 py-24 md:py-32 lg:py-40">
+    <section
+      id="story"
+      className="relative bg-ivory-50 py-24 md:py-32 lg:py-40"
+    >
       <div className="container-wide">
         {/* Headline */}
         <Reveal className="mb-20 md:mb-32">
           <div className="max-w-4xl">
             <p className="eyebrow mb-6">The Story</p>
+
             <h2 className="font-serif text-display font-light text-charcoal-900 text-balance">
               I am not just a storyteller.
               <br />
-              <span className="italic text-earth-terracotta">I am the story.</span>
+              <span className="italic text-earth-terracotta">
+                I am the story.
+              </span>
             </h2>
+
             <div className="mt-8 h-px w-32 bg-earth-ochre/40" />
           </div>
         </Reveal>
 
         {/* Story timeline */}
         <div className="space-y-20 md:space-y-32 lg:space-y-40">
-          {storyPoints.map((point, i) => {
+          {visibleStoryPoints.map((point, i) => {
             const Icon = pointIcons[i] || User;
             const isEven = i % 2 === 0;
 
@@ -43,7 +64,9 @@ export default function StoryTimeline() {
               <Reveal key={point.year}>
                 <div
                   className={`grid grid-cols-1 items-center gap-8 md:gap-12 lg:gap-20 ${
-                    isEven ? 'lg:grid-cols-[1fr_1.2fr]' : 'lg:grid-cols-[1.2fr_1fr]'
+                    isEven
+                      ? 'lg:grid-cols-[1fr_1.2fr]'
+                      : 'lg:grid-cols-[1.2fr_1fr]'
                   }`}
                 >
                   {/* Image / Portrait */}
@@ -67,7 +90,9 @@ export default function StoryTimeline() {
                       <span className="text-xs font-medium uppercase tracking-[0.3em] text-earth-ochre">
                         {point.year}
                       </span>
+
                       <span className="h-px flex-1 bg-charcoal-200" />
+
                       <span className="text-xs font-medium text-charcoal-300">
                         {String(i + 1).padStart(2, '0')}
                       </span>
@@ -89,13 +114,42 @@ export default function StoryTimeline() {
           })}
         </div>
 
+        {/* Read More / Read Less */}
+        {storyPoints.length > 3 && (
+          <Reveal className="mt-20 md:mt-28" delay={1}>
+            <div className="flex justify-center">
+              <button
+                type="button"
+                onClick={() => setShowMore(!showMore)}
+                className="group inline-flex items-center gap-4 border-b border-earth-ochre/60 pb-3 text-xs font-medium uppercase tracking-[0.3em] text-charcoal-900 transition-colors duration-300 hover:border-earth-terracotta hover:text-earth-terracotta"
+              >
+                <span>
+                  {showMore ? 'Read Less' : 'Read More'}
+                </span>
+
+                <span
+                  className={`text-lg transition-transform duration-300 ${
+                    showMore
+                      ? 'rotate-180'
+                      : 'group-hover:translate-y-1'
+                  }`}
+                >
+                  ↓
+                </span>
+              </button>
+            </div>
+          </Reveal>
+        )}
+
         {/* Closing statement */}
         <Reveal className="mt-24 md:mt-32 lg:mt-40" delay={2}>
           <div className="border-t border-charcoal-200 pt-16 text-center">
             <p className="font-serif text-4xl font-light italic text-charcoal-900 md:text-5xl lg:text-6xl text-balance">
               If I can rise,
               <br />
-              <span className="text-earth-terracotta">so can you.</span>
+              <span className="text-earth-terracotta">
+                so can you.
+              </span>
             </p>
           </div>
         </Reveal>

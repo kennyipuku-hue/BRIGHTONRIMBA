@@ -1,10 +1,12 @@
 import { useEffect, useState } from 'react';
 import { Menu, X, Headphones } from 'lucide-react';
 import { navLinks } from '@/data/content';
+import BookingModal from '@/components/BookingModal';
 
 export default function Navbar() {
   const [scrolled, setScrolled] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
+  const [isBookingOpen, setIsBookingOpen] = useState(false);
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 60);
@@ -71,16 +73,17 @@ export default function Navbar() {
                 Listen
               </span>
             </a>
-            <a
-              href="#contact"
-              className={`border px-6 py-3 text-xs font-medium uppercase tracking-[0.2em] transition-all duration-500 ${
-                scrolled
-                  ? 'border-charcoal-900 text-charcoal-900 hover:bg-charcoal-900 hover:text-ivory-100'
-                  : 'border-ivory-200/40 text-ivory-100 hover:bg-ivory-100 hover:text-charcoal-900'
-              }`}
-            >
-              Book Brighton
-            </a>
+            <button
+  type="button"
+  onClick={() => setIsBookingOpen(true)}
+  className={`border px-6 py-3 text-xs font-medium uppercase tracking-[0.2em] transition-all duration-500 ${
+    scrolled
+      ? 'border-charcoal-900 text-charcoal-900 hover:bg-charcoal-900 hover:text-ivory-100'
+      : 'border-ivory-200/40 text-ivory-100 hover:bg-ivory-100 hover:text-charcoal-900'
+  }`}
+>
+  Book Brighton
+</button>
           </div>
 
           {/* Mobile toggle */}
@@ -139,13 +142,16 @@ export default function Navbar() {
             </nav>
 
             <div className="mt-10 flex flex-col gap-3">
-              <a
-                href="#contact"
-                onClick={() => setMenuOpen(false)}
-                className="btn-primary bg-ivory-100 text-charcoal-900 hover:bg-accent"
-              >
-                Book Brighton
-              </a>
+              <button
+  type="button"
+  onClick={() => {
+    setMenuOpen(false);
+    setIsBookingOpen(true);
+  }}
+  className="btn-primary bg-ivory-100 text-charcoal-900 hover:bg-accent"
+>
+  Book Brighton
+</button>
               <a
                 href="#masterclass"
                 onClick={() => setMenuOpen(false)}
@@ -157,6 +163,10 @@ export default function Navbar() {
           </div>
         </div>
       </div>
+         <BookingModal
+        isOpen={isBookingOpen}
+        onClose={() => setIsBookingOpen(false)}
+      />
     </>
   );
 }

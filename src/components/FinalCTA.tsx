@@ -1,7 +1,11 @@
+import { useState } from 'react';
 import Reveal from '@/components/Reveal';
+import BookingModal from '@/components/BookingModal';
 import { ArrowRight, Headphones } from 'lucide-react';
 
 export default function FinalCTA() {
+  const [isBookingOpen, setIsBookingOpen] = useState(false);
+
   return (
     <section
       id="contact"
@@ -43,20 +47,26 @@ export default function FinalCTA() {
 
         <Reveal delay={3}>
           <div className="mt-16 flex flex-col gap-4 sm:flex-row sm:justify-center">
-            <a
-              href="#contact"
-              className="btn-primary bg-ivory-100 text-charcoal-900 hover:bg-accent"
-            >
+            <button
+  type="button"
+  onClick={() => setIsBookingOpen(true)}
+  className="btn-primary bg-ivory-100 text-charcoal-900 hover:bg-accent"
+>
               Book Brighton
               <ArrowRight className="h-4 w-4" />
-            </a>
+            </button>
             <a href="#masterclass" className="btn-light">
               Listen to the Masterclass
               <Headphones className="h-4 w-4" />
             </a>
           </div>
         </Reveal>
-      </div>
+          </div>
+
+      <BookingModal
+  isOpen={isBookingOpen}
+  onClose={() => setIsBookingOpen(false)}
+/>
     </section>
   );
 }
