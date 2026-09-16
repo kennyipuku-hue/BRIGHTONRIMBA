@@ -1,31 +1,26 @@
+import { useState } from 'react';
+import BookingModal from '@/components/BookingModal';
 import { ArrowDown, Headphones } from 'lucide-react';
 import { heroRoles } from '@/data/content';
 
 export default function Hero() {
+  const [isBookingOpen, setIsBookingOpen] = useState(false);
+
   return (
+
     <section
       id="hero"
       className="relative min-h-screen w-full overflow-hidden bg-charcoal-900"
     >
-      {/* Background image with parallax-like slow zoom */}
-      <div className="absolute inset-0">
-        <img
-          src="/background.png"
-          alt="Brighton Rimba"
-          className="h-full w-full object-cover opacity-100 animate-slow-zoom"
-        />
-        <div className="absolute inset-0 bg-gradient-to-b from-charcoal-900/60 via-charcoal-900/40 to-charcoal-900" />
-        <div className="absolute inset-0 bg-gradient-to-r from-charcoal-900/80 via-transparent to-charcoal-900/40" />
-      </div>
-
-      {/* Grain */}
-      <div
-        className="absolute inset-0 opacity-30 pointer-events-none"
-        style={{
-          backgroundImage:
-            "url(\"data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' /%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.5' /%3E%3C/svg%3E\")",
-        }}
-      />
+      {/* Background image */}
+<div className="absolute inset-0">
+  <img
+    src="/background.png"
+    alt="Brighton Rimba"
+    className="h-full w-full object-cover"
+  />
+</div>
+    
 
       {/* Content */}
       <div className="container-wide relative z-10 flex min-h-screen flex-col justify-center pt-24 pb-16">
@@ -80,9 +75,13 @@ export default function Hero() {
           <a href="#story" className="btn-primary bg-ivory-100 text-charcoal-900 hover:bg-accent">
             My Story
           </a>
-          <a href="#contact" className="btn-light">
-            Book Brighton
-          </a>
+          <button
+  type="button"
+  onClick={() => setIsBookingOpen(true)}
+  className="btn-light"
+>
+  Book Brighton
+</button>
         </div>
       </div>
 
@@ -94,13 +93,23 @@ export default function Hero() {
         </div>
       </div>
 
-      {/* Side label */}
+            {/* Side label */}
       <div className="absolute bottom-8 right-6 hidden lg:block">
-        <a href="#masterclass" className="flex items-center gap-3 text-ivory-300/60 hover:text-accent transition-colors duration-500 group">
+        <a
+          href="#masterclass"
+          className="flex items-center gap-3 text-ivory-300/60 hover:text-accent transition-colors duration-500 group"
+        >
           <Headphones className="h-5 w-5" strokeWidth={1.5} />
-          <span className="text-[10px] uppercase tracking-[0.3em]">The Orphan's Masterclass</span>
+          <span className="text-[10px] uppercase tracking-[0.3em]">
+            The Orphan's Masterclass
+          </span>
         </a>
       </div>
+
+      <BookingModal
+        isOpen={isBookingOpen}
+        onClose={() => setIsBookingOpen(false)}
+      />
     </section>
   );
 }

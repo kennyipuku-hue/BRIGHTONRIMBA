@@ -11,16 +11,76 @@ export default function BookingModal({
   onClose,
 }: BookingModalProps) {
   const [submitted, setSubmitted] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [error, setError] = useState('');
 
   if (!isOpen) return null;
 
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (
+    e: React.FormEvent<HTMLFormElement>
+  ) => {
     e.preventDefault();
-    setSubmitted(true);
+
+    setIsSubmitting(true);
+    setError('');
+
+    try {
+      const form = e.currentTarget;
+      const formData = new FormData(form);
+
+      formData.append(
+        'access_key',
+        import.meta.env.VITE_WEB3FORMS_ACCESS_KEY
+      );
+
+      formData.append(
+        'subject',
+        'New Brighton Rimba Booking Request'
+      );
+
+      formData.append(
+        'from_name',
+        'Brighton Rimba Website'
+      );
+
+      const data = Object.fromEntries(formData);
+
+      const response = await fetch(
+        'https://api.web3forms.com/submit',
+        {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            Accept: 'application/json',
+          },
+          body: JSON.stringify(data),
+        }
+      );
+
+      const result = await response.json();
+
+      if (result.success) {
+        form.reset();
+        setSubmitted(true);
+      } else {
+        setError(
+          result.message ||
+            'Something went wrong. Please try again.'
+        );
+      }
+    } catch (error) {
+      console.error(error);
+      setError(
+        'Something went wrong. Please try again.'
+      );
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   const handleClose = () => {
     setSubmitted(false);
+    setError('');
     onClose();
   };
 
@@ -33,7 +93,7 @@ export default function BookingModal({
         className="relative max-h-[92vh] w-full max-w-5xl overflow-hidden bg-charcoal-900 shadow-2xl"
         onClick={(e) => e.stopPropagation()}
       >
-        {/* Close */}
+        {/* Close Button */}
         <button
           type="button"
           onClick={handleClose}
@@ -44,8 +104,8 @@ export default function BookingModal({
         </button>
 
         <div className="grid max-h-[92vh] overflow-y-auto lg:grid-cols-[0.85fr_1.15fr]">
-          
-          {/* Left visual panel */}
+
+          {/* Left Image */}
           <div className="relative hidden min-h-[650px] overflow-hidden lg:block">
             <img
               src="/brighton-portrait.png"
@@ -70,10 +130,12 @@ export default function BookingModal({
             </div>
           </div>
 
-          {/* Right form */}
+          {/* Right Side */}
           <div className="bg-ivory-50 p-6 md:p-10 lg:p-12">
+
             {!submitted ? (
               <>
+                {/* Header */}
                 <div className="mb-8 max-w-xl pr-8">
                   <p className="eyebrow mb-4 text-earth-ochre">
                     Book Brighton
@@ -89,9 +151,15 @@ export default function BookingModal({
                   </p>
                 </div>
 
-                <form onSubmit={handleSubmit} className="space-y-6">
+                {/* Form */}
+                <form
+                  onSubmit={handleSubmit}
+                  className="space-y-6"
+                >
+
                   {/* Name + Email */}
                   <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
+
                     <div>
                       <label
                         htmlFor="booking-name"
@@ -125,10 +193,12 @@ export default function BookingModal({
                         className="w-full border-b border-charcoal-300 bg-transparent py-3 text-charcoal-900 outline-none transition-colors focus:border-earth-terracotta"
                       />
                     </div>
+
                   </div>
 
                   {/* Organisation + Phone */}
                   <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
+
                     <div>
                       <label
                         htmlFor="booking-organisation"
@@ -160,10 +230,12 @@ export default function BookingModal({
                         className="w-full border-b border-charcoal-300 bg-transparent py-3 text-charcoal-900 outline-none transition-colors focus:border-earth-terracotta"
                       />
                     </div>
+
                   </div>
 
-                  {/* Event type + Date */}
+                  {/* Event Type + Date */}
                   <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
+
                     <div>
                       <label
                         htmlFor="booking-event-type"
@@ -181,14 +253,38 @@ export default function BookingModal({
                         <option value="" disabled>
                           Select event type
                         </option>
-                        <option value="conference">Conference</option>
-                        <option value="corporate">Corporate Event</option>
-                        <option value="keynote">Keynote</option>
-                        <option value="workshop">Workshop</option>
-                        <option value="university">University / School</option>
-                        <option value="church">Church / Faith Event</option>
-                        <option value="podcast">Podcast / Media</option>
-                        <option value="other">Other</option>
+
+                        <option value="conference">
+                          Conference
+                        </option>
+
+                        <option value="corporate">
+                          Corporate Event
+                        </option>
+
+                        <option value="keynote">
+                          Keynote
+                        </option>
+
+                        <option value="workshop">
+                          Workshop
+                        </option>
+
+                        <option value="university">
+                          University / School
+                        </option>
+
+                        <option value="church">
+                          Church / Faith Event
+                        </option>
+
+                        <option value="podcast">
+                          Podcast / Media
+                        </option>
+
+                        <option value="other">
+                          Other
+                        </option>
                       </select>
                     </div>
 
@@ -207,6 +303,7 @@ export default function BookingModal({
                         className="w-full border-b border-charcoal-300 bg-transparent py-3 text-charcoal-900 outline-none transition-colors focus:border-earth-terracotta"
                       />
                     </div>
+
                   </div>
 
                   {/* Location */}
@@ -263,19 +360,35 @@ export default function BookingModal({
                     />
                   </div>
 
+                  {/* Error */}
+                  {error && (
+                    <div className="border border-red-300 bg-red-50 px-4 py-3 text-sm text-red-700">
+                      {error}
+                    </div>
+                  )}
+
                   {/* Submit */}
                   <button
                     type="submit"
-                    className="group inline-flex w-full items-center justify-center gap-3 bg-charcoal-900 px-6 py-4 text-xs font-medium uppercase tracking-[0.2em] text-ivory-100 transition-all duration-300 hover:bg-earth-terracotta"
+                    disabled={isSubmitting}
+                    className="group inline-flex w-full items-center justify-center gap-3 bg-charcoal-900 px-6 py-4 text-xs font-medium uppercase tracking-[0.2em] text-ivory-100 transition-all duration-300 hover:bg-earth-terracotta disabled:cursor-not-allowed disabled:opacity-60"
                   >
-                    Submit Booking Request
-                    <ArrowRight className="h-4 w-4 transition-transform duration-300 group-hover:translate-x-1" />
+                    {isSubmitting
+                      ? 'Sending Request...'
+                      : 'Submit Booking Request'}
+
+                    {!isSubmitting && (
+                      <ArrowRight className="h-4 w-4 transition-transform duration-300 group-hover:translate-x-1" />
+                    )}
                   </button>
+
                 </form>
               </>
             ) : (
+
               /* Success */
               <div className="flex min-h-[600px] flex-col items-center justify-center text-center">
+
                 <div className="mb-8 flex h-16 w-16 items-center justify-center rounded-full border border-earth-ochre/40">
                   <Check className="h-7 w-7 text-earth-terracotta" />
                 </div>
@@ -287,6 +400,7 @@ export default function BookingModal({
                 <h2 className="max-w-lg font-serif text-4xl font-light text-charcoal-900 md:text-5xl">
                   Thank you.
                   <br />
+
                   <span className="italic text-earth-terracotta">
                     We'll be in touch.
                   </span>
@@ -304,8 +418,10 @@ export default function BookingModal({
                 >
                   Close
                 </button>
+
               </div>
             )}
+
           </div>
         </div>
       </div>
